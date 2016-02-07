@@ -12,6 +12,10 @@
 #import "AudioUnit/AudioUnit.h"
 #import <AudioToolbox/AudioToolbox.h>
 
+#if TARGET_OS_IPHONE
+typedef UInt32  AudioDeviceID;
+#endif
+
 /// PdAudioUnit: object that operates pd's audio input and
 /// output through an Audio Unit. The parameters can be changed
 /// after it has been instatiated with its configure method,

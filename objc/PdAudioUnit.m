@@ -96,13 +96,16 @@ OSStatus destroyAggregateDevice(AudioDeviceID inDeviceToDestroy);
 	AudioDeviceID device;
 	CFStringRef deviceName;
 	UInt32 size = 0;
+
+#if !TARGET_OS_IPHONE
 	AudioObjectPropertyAddress property;
 	property.mScope = kAudioObjectPropertyScopeGlobal;
 	property.mElement = kAudioObjectPropertyElementMaster;
-	
+#endif
+
 	if (inputEnabled_) {
 
-		#if TARGET_OS_MAC
+		#if !TARGET_OS_IPHONE
 			// try to print the device name
 			size = sizeof(AudioDeviceID);
 			AU_RETURN_IF_ERROR(AudioUnitGetProperty(audioUnit_,
@@ -145,7 +148,7 @@ OSStatus destroyAggregateDevice(AudioDeviceID inDeviceToDestroy);
 		AU_LOG(@"input not enabled");
 	}
 	
-	#if TARGET_OS_MAC
+	#if !TARGET_OS_IPHONE
 		// try to print the device name
 		size = sizeof(AudioDeviceID);
 		AU_RETURN_IF_ERROR(AudioUnitGetProperty(audioUnit_,
@@ -246,6 +249,7 @@ static OSStatus AudioRenderCallback(void *inRefCon,
 	initialized_ = NO;
 	AU_RETURN_IF_ERROR(AudioUnitUninitialize(audioUnit_));
 	AU_RETURN_IF_ERROR(AudioComponentInstanceDispose(audioUnit_));
+#if !TARGET_OS_IPHONE
 	if(aggregateDevice != kAudioDeviceUnknown) { // OSX
 //		AU_RETURN_IF_ERROR(AUGraphStop(auGraph_));
 //		AUGraphClearConnections(auGraph_);
@@ -259,6 +263,7 @@ static OSStatus AudioRenderCallback(void *inRefCon,
 	else {
 		AU_LOGV(@"destroyed audio unit");
 	}
+#endif
 }
 
 #if TARGET_OS_IPHONE
@@ -373,7 +378,7 @@ static OSStatus AudioRenderCallback(void *inRefCon,
 //                                                      &streamDescription,
 //                                                      sizeof(streamDescription)));
 
-#if TARGET_OS_MAC
+#if !TARGET_OS_IPHONE
 		// set input device (osx only... iphone has only one device)
 		AudioDeviceID inputDevice, outputDevice;// = kAudioObjectUnknown;
 		UInt32 size = sizeof(inputDevice);

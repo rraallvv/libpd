@@ -530,11 +530,9 @@ int getNumChannelsForDevice(AudioDeviceID device, AudioObjectPropertyScope scope
 	}
 }
 
-#endif // TARGET_OS_IPHONE
+#else // TARGET_OS_IPHONE
 
 #pragma mark - Private Mac Helpers
-
-#if TARGET_OS_MAC
 
 OSStatus getDefaultInputDevice(AudioDeviceID defaultDevice) {
 	UInt32 size = sizeof(AudioDeviceID);
@@ -585,6 +583,6 @@ int getNumChannelsForDevice(AudioDeviceID device, AudioObjectPropertyScope scope
 	return numChannels;
 }
 
-#endif // TARGET_OS_MAC
+#endif // TARGET_OS_IPHONE
 
 @end
